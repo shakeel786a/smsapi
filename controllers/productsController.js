@@ -1,6 +1,23 @@
 const Product = require("../models/product");
 
-const createPorducts = async (req, res) => {};
+const createPorducts = async (req, res) => {
+  //   res.status(200).json({ message: "Success", data: {} });
+  try {
+    const { name, price, featured, rating, company } = req?.body || {};
+    const newData = new Product({
+      name: name,
+      price: price,
+      featured: featured,
+      rating: rating,
+      company: company,
+    });
+    const result = await newData.save();
+
+    res.status(200).json({ success: 1, message: "Success", data: result });
+  } catch (error) {
+    console.log("error=======>", error);
+  }
+};
 
 const getAllProducts = async (req, res) => {
   const { company, name, featured, sort, select } = req.query;
@@ -37,9 +54,67 @@ const getAllProducts = async (req, res) => {
   apiData = apiData.skip(skip).limit(limit);
 
   const myData = await apiData;
-  res
-    .status(200)
-    .json({ message: "Success", data: myData, nbHits: myData?.length });
+  res.status(200).json({
+    success: 1,
+    message: "Success",
+    data: myData,
+    nbHits: myData?.length,
+  });
 };
 
-module.exports = { createPorducts, getAllProducts };
+const getProductById = async (req, res) => {
+  const { productId } = req.params || {};
+  try {
+    const result = await Product.findById(productId);
+    res.status(200).json({
+      success: 1,
+      message: "Success",
+      data: result,
+    });
+  } catch (error) {
+    console.log("error=====>", error);
+  }
+};
+
+const productUpdateById = async (req, res) => {
+  const { productId } = req.params || {};
+  try {
+    const result = await Product.updateOne(
+      {
+        _id: productId,
+      },
+      req.body
+    );
+    res.status(200).json({
+      success: 1,
+      message: "Success",
+      data: result,
+    });
+  } catch (error) {
+    console.log("error=====>", error);
+  }
+};
+
+const productDeleteById = async (req, res) => {
+  const { productId } = req.params || {};
+  try {
+    const result = await Product.remove({
+      _id: productId,
+    });
+    res.status(200).json({
+      success: 1,
+      message: "Success",
+      data: result,
+    });
+  } catch (error) {
+    console.log("error=====>", error);
+  }
+};
+
+module.exports = {
+  createPorducts,
+  getAllProducts,
+  getProductById,
+  productUpdateById,
+  productDeleteById,
+};

@@ -7,6 +7,8 @@ const productRoutes = require("./routes/products");
 const PORT = process.env.PORT || 4000;
 
 // Middleware or to set router
+app.use(express.json());
+app.use(express.urlencoded());
 app.use("/api/products", productRoutes);
 
 app.get("/", (req, res) => {
