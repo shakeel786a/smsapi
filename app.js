@@ -3,11 +3,15 @@ const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
 const productRoutes = require("./routes/products");
+const menuRoutes = require("./routes/menu");
 
 const PORT = process.env.PORT || 4000;
 
 // Middleware or to set router
+app.use(express.json());
+app.use(express.urlencoded());
 app.use("/api/products", productRoutes);
+app.use("/api/menu", menuRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hi, I am live");
