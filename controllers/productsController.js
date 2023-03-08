@@ -13,7 +13,7 @@ const createPorducts = async (req, res) => {
     });
     const result = await newData.save();
 
-    res.status(200).json({ success: 1, message: "Success", data: result });
+    res.status(200).json({ isSuccess: 1, message: "Success", data: result });
   } catch (error) {
     console.log("error=======>", error);
   }
@@ -55,7 +55,7 @@ const getAllProducts = async (req, res) => {
 
   const myData = await apiData;
   res.status(200).json({
-    success: 1,
+    isSuccess: 1,
     message: "Success",
     data: myData,
     nbHits: myData?.length,
@@ -67,7 +67,7 @@ const getProductById = async (req, res) => {
   try {
     const result = await Product.findById(productId);
     res.status(200).json({
-      success: 1,
+      isSuccess: 1,
       message: "Success",
       data: result,
     });
@@ -86,7 +86,7 @@ const productUpdateById = async (req, res) => {
       req.body
     );
     res.status(200).json({
-      success: 1,
+      isSuccess: 1,
       message: "Success",
       data: result,
     });
@@ -102,7 +102,7 @@ const productDeleteById = async (req, res) => {
       _id: productId,
     });
     res.status(200).json({
-      success: 1,
+      isSuccess: 1,
       message: "Success",
       data: result,
     });
