@@ -17,16 +17,28 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 4.9,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
   company: {
     type: String,
     // enum: {
     //   values: ["apple", "samsung", "dell", "lenevo"],
     //   message: `{VALUE} is not supported`,
     // },
+  },
+  createdBy: {
+    type: String,
+    required: false,
+  },
+  createdOn: {
+    type: Date,
+    default: Date.now(),
+  },
+  modifiedBy: {
+    type: String,
+    required: false,
+  },
+  modifiedOn: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

@@ -1,9 +1,10 @@
-const Product = require("../models/product");
+const User = require("../models/user");
+const UserRole = require("../models/userRole");
+const { getUserRoleById } = require("./userRoleController");
 
-const createPorducts = async (req, res) => {
-  //   res.status(200).json({ message: "Success", data: {} });
+const createUsers = async (req, res) => {
   try {
-    const newData = new Product(req?.body || {});
+    const newData = new User(req?.body || {});
     const result = await newData.save();
 
     res.status(200).json({ isSuccess: 1, message: "Success", data: result });
@@ -12,22 +13,34 @@ const createPorducts = async (req, res) => {
   }
 };
 
-const getAllProducts = async (req, res) => {
-  const { company, name, featured, sort, select } = req.query;
+const getAllUsers = async (req, res) => {
+  const { firstName, lastName, sort, select, isActive } = req.query;
   const queryObject = {};
 
-  if (company) {
-    queryObject.company = company;
-  }
-  if (featured) {
-    queryObject.company = featured;
-  }
-  if (name) {
-    // queryObject.name = name;
-    queryObject.name = { $regex: name, $options: "i" };
+  if (isActive) {
+    queryObject.isActive = isActive;
   }
 
-  let apiData = Product.find(queryObject);
+  if (firstName) {
+    // queryObject.name = name;
+    queryObject.firstName = { $regex: firstName, $options: "i" };
+  }
+  if (lastName) {
+    // queryObject.name = name;
+    queryObject.lastName = { $regex: lastName, $options: "i" };
+  }
+
+  let apiData = User.find(queryObject);
+
+  const abc = db.users.aggregate({
+    $lookup: {
+      from: "userroles",
+      localField: "userRoleId",
+      foreignField: "_id",
+      as: "userRoleId",
+    },
+  });
+  console.log("abc==============>", abc);
 
   if (sort) {
     let sortFix = sort.split(",").join(" ");
@@ -55,10 +68,10 @@ const getAllProducts = async (req, res) => {
   });
 };
 
-const getProductById = async (req, res) => {
-  const { productId } = req.params || {};
+const getUserById = async (req, res) => {
+  const { userId } = req.params || {};
   try {
-    const result = await Product.findById(productId);
+    const result = await User.findById(userId);
     res.status(200).json({
       isSuccess: 1,
       message: "Success",
@@ -69,12 +82,12 @@ const getProductById = async (req, res) => {
   }
 };
 
-const productUpdateById = async (req, res) => {
-  const { productId } = req.params || {};
+const userUpdateById = async (req, res) => {
+  const { userId } = req.params || {};
   try {
-    const result = await Product.updateOne(
+    const result = await User.updateOne(
       {
-        _id: productId,
+        _id: userId,
       },
       req.body
     );
@@ -88,11 +101,11 @@ const productUpdateById = async (req, res) => {
   }
 };
 
-const productDeleteById = async (req, res) => {
-  const { productId } = req.params || {};
+const userDeleteById = async (req, res) => {
+  const { userId } = req.params || {};
   try {
-    const result = await Product.remove({
-      _id: productId,
+    const result = await User.remove({
+      _id: userId,
     });
     res.status(200).json({
       isSuccess: 1,
@@ -105,9 +118,9 @@ const productDeleteById = async (req, res) => {
 };
 
 module.exports = {
-  createPorducts,
-  getAllProducts,
-  getProductById,
-  productUpdateById,
-  productDeleteById,
+  createUsers,
+  getAllUsers,
+  getUserById,
+  userUpdateById,
+  userDeleteById,
 };

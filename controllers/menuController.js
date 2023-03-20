@@ -3,12 +3,7 @@ const Menu = require("../models/menu");
 const createMenu = async (req, res) => {
   //   res.status(200).json({ message: "Success", data: {} });
   try {
-    const { title, icon, pageRedirection } = req?.body || {};
-    const newData = new Menu({
-      title: title,
-      icon: icon,
-      pageRedirection: pageRedirection,
-    });
+    const newData = new Menu(req?.body || {});
     const result = await newData.save();
 
     res.status(200).json({ isSuccess: 1, message: "Success", data: result });

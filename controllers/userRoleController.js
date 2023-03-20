@@ -1,9 +1,8 @@
-const Product = require("../models/product");
+const UserRole = require("../models/userRole");
 
-const createPorducts = async (req, res) => {
-  //   res.status(200).json({ message: "Success", data: {} });
+const createUserRoles = async (req, res) => {
   try {
-    const newData = new Product(req?.body || {});
+    const newData = new UserRole(req?.body || {});
     const result = await newData.save();
 
     res.status(200).json({ isSuccess: 1, message: "Success", data: result });
@@ -12,22 +11,25 @@ const createPorducts = async (req, res) => {
   }
 };
 
-const getAllProducts = async (req, res) => {
-  const { company, name, featured, sort, select } = req.query;
+const getAllUserRoles = async (req, res) => {
+  const { name, type, isActive, sort, select } = req.query;
   const queryObject = {};
 
-  if (company) {
-    queryObject.company = company;
-  }
-  if (featured) {
-    queryObject.company = featured;
-  }
   if (name) {
-    // queryObject.name = name;
+    queryObject.name = name;
+  }
+  if (type) {
+    queryObject.type = type;
+  }
+  if (type) {
+    queryObject.isActive = isActive;
+  }
+
+  if (name) {
     queryObject.name = { $regex: name, $options: "i" };
   }
 
-  let apiData = Product.find(queryObject);
+  let apiData = UserRole.find(queryObject);
 
   if (sort) {
     let sortFix = sort.split(",").join(" ");
@@ -39,13 +41,6 @@ const getAllProducts = async (req, res) => {
     apiData = apiData.select(selectFix);
   }
 
-  let page = Number(req?.query?.page) || 1;
-  let limit = Number(req?.query?.limit) || 10;
-
-  let skip = (page - 1) * limit;
-
-  apiData = apiData.skip(skip).limit(limit);
-
   const myData = await apiData;
   res.status(200).json({
     isSuccess: 1,
@@ -55,10 +50,10 @@ const getAllProducts = async (req, res) => {
   });
 };
 
-const getProductById = async (req, res) => {
-  const { productId } = req.params || {};
+const getUserRoleById = async (req, res) => {
+  const { userRoleId } = req.params || {};
   try {
-    const result = await Product.findById(productId);
+    const result = await UserRole.findById(userRoleId);
     res.status(200).json({
       isSuccess: 1,
       message: "Success",
@@ -69,12 +64,12 @@ const getProductById = async (req, res) => {
   }
 };
 
-const productUpdateById = async (req, res) => {
-  const { productId } = req.params || {};
+const userRoleUpdateById = async (req, res) => {
+  const { userRoleId } = req.params || {};
   try {
-    const result = await Product.updateOne(
+    const result = await UserRole.updateOne(
       {
-        _id: productId,
+        _id: userRoleId,
       },
       req.body
     );
@@ -88,11 +83,11 @@ const productUpdateById = async (req, res) => {
   }
 };
 
-const productDeleteById = async (req, res) => {
-  const { productId } = req.params || {};
+const userRoleDeleteById = async (req, res) => {
+  const { userRoleId } = req.params || {};
   try {
-    const result = await Product.remove({
-      _id: productId,
+    const result = await UserRole.remove({
+      _id: userRoleId,
     });
     res.status(200).json({
       isSuccess: 1,
@@ -105,9 +100,9 @@ const productDeleteById = async (req, res) => {
 };
 
 module.exports = {
-  createPorducts,
-  getAllProducts,
-  getProductById,
-  productUpdateById,
-  productDeleteById,
+  createUserRoles,
+  getAllUserRoles,
+  getUserRoleById,
+  userRoleUpdateById,
+  userRoleDeleteById,
 };

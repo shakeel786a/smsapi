@@ -1,26 +1,17 @@
 const mongoose = require("mongoose");
 
-const menuSchema = new mongoose.Schema({
-  title: {
+const userRoleSchema = mongoose.Schema({
+  name: {
     type: String,
-    // required: true,
-    required: [true, "Title must be provided"],
+    required: true,
   },
-  icon: {
+  type: {
     type: String,
-    default: "",
+    required: true,
   },
   isActive: {
     type: Number,
     default: 0,
-  },
-  order: {
-    type: Number,
-    default: 0,
-  },
-  pageRedirection: {
-    type: String,
-    required: false,
   },
   createdBy: {
     type: String,
@@ -40,4 +31,4 @@ const menuSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Menu", menuSchema);
+module.exports = mongoose.model("UserRole", userRoleSchema);
