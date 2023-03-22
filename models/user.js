@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   isActive: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
   religion: {
     type: String,

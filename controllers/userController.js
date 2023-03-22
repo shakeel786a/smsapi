@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const UserRole = require("../models/userRole");
-const { getUserRoleById } = require("./userRoleController");
 
 const createUsers = async (req, res) => {
   try {
@@ -19,28 +18,35 @@ const getAllUsers = async (req, res) => {
 
   if (isActive) {
     queryObject.isActive = isActive;
+    // queryObject.isActive = { $regex: isActive, $options: "i" };
   }
 
   if (firstName) {
-    // queryObject.name = name;
     queryObject.firstName = { $regex: firstName, $options: "i" };
   }
   if (lastName) {
-    // queryObject.name = name;
     queryObject.lastName = { $regex: lastName, $options: "i" };
   }
 
-  let apiData = User.find(queryObject);
-
-  const abc = db.users.aggregate({
-    $lookup: {
-      from: "userroles",
-      localField: "userRoleId",
-      foreignField: "_id",
-      as: "userRoleId",
+  // let apiData = User.find(queryObject);
+  let apiData = User.aggregate([
+    {
+      $addFields: {
+        convertedUserRoleId: { $toObjectId: "$userRoleId" },
+      },
     },
-  });
-  console.log("abc==============>", abc);
+    {
+      $lookup: {
+        from: "userroles",
+        localField: "convertedUserRoleId",
+        foreignField: "_id",
+        as: "userRoleId",
+      },
+    },
+    {
+      $match: queryObject,
+    },
+  ]);
 
   if (sort) {
     let sortFix = sort.split(",").join(" ");
