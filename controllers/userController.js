@@ -32,13 +32,13 @@ const getAllUsers = async (req, res) => {
   let apiData = User.aggregate([
     {
       $addFields: {
-        convertedUserRoleId: { $toObjectId: "$userRoleId" },
+        userRoleId: { $toObjectId: "$userRoleId" },
       },
     },
     {
       $lookup: {
         from: "userroles",
-        localField: "convertedUserRoleId",
+        localField: "userRoleId",
         foreignField: "_id",
         as: "userRoleId",
       },

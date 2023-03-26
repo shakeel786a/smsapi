@@ -6,6 +6,7 @@ const productRoutes = require("./routes/products");
 const menuRoutes = require("./routes/menu");
 const userRoles = require("./routes/userRole");
 const users = require("./routes/users");
+const states = require("./routes/states");
 
 const PORT = process.env.PORT || 4000;
 
@@ -16,6 +17,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/userRoles", userRoles);
 app.use("/api/users", users);
+app.use("/api/states", states);
 
 app.get("/", (req, res) => {
   res.send("Hi, I am live");
