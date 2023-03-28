@@ -91,7 +91,7 @@ const productUpdateById = async (req, res) => {
 const productDeleteById = async (req, res) => {
   const { productId } = req.params || {};
   try {
-    const result = await Product.remove({
+    const result = await Product.deleteOne({
       _id: productId,
     });
     res.status(200).json({

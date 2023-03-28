@@ -86,7 +86,7 @@ const userRoleUpdateById = async (req, res) => {
 const userRoleDeleteById = async (req, res) => {
   const { userRoleId } = req.params || {};
   try {
-    const result = await UserRole.remove({
+    const result = await UserRole.deleteOne({
       _id: userRoleId,
     });
     res.status(200).json({

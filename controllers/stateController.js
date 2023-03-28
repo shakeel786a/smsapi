@@ -81,7 +81,7 @@ const stateUpdateById = async (req, res) => {
 const stateDeleteById = async (req, res) => {
   const { stateId } = req.params || {};
   try {
-    const result = await State.remove({
+    const result = await State.deleteOne({
       _id: stateId,
     });
     res.status(200).json({

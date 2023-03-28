@@ -75,7 +75,7 @@ const menuUpdateById = async (req, res) => {
 const menuDeleteById = async (req, res) => {
   const { menuId } = req.params || {};
   try {
-    const result = await Menu.remove({
+    const result = await Menu.deleteOne({
       _id: menuId,
     });
     res.status(200).json({

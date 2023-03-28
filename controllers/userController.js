@@ -131,7 +131,7 @@ const userUpdateById = async (req, res) => {
 const userDeleteById = async (req, res) => {
   const { userId } = req.params || {};
   try {
-    const result = await User.remove({
+    const result = await User.deleteOne({
       _id: userId,
     });
     res.status(200).json({

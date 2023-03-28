@@ -127,7 +127,7 @@ const cityUpdateById = async (req, res) => {
 const cityDeleteById = async (req, res) => {
   const { cityId } = req.params || {};
   try {
-    const result = await City.remove({
+    const result = await City.deleteOne({
       _id: cityId,
     });
     res.status(200).json({
