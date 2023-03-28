@@ -1,9 +1,9 @@
 const User = require("../models/user");
-const UserRole = require("../models/userRole");
+const City = require("../models/city");
 
-const createUsers = async (req, res) => {
+const createCity = async (req, res) => {
   try {
-    const newData = new User(req?.body || {});
+    const newData = new City(req?.body || {});
     const result = await newData.save();
 
     res.status(200).json({ isSuccess: 1, message: "Success", data: result });
@@ -12,35 +12,31 @@ const createUsers = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
-  const { firstName, lastName, sort, select, isActive } = req.query;
+const getAllCities = async (req, res) => {
+  const { cityName, sort, select, isActive } = req.query;
   const queryObject = {};
 
   if (isActive) {
     queryObject.isActive = isActive;
-    // queryObject.isActive = { $regex: isActive, $options: "i" };
   }
 
-  if (firstName) {
-    queryObject.firstName = { $regex: firstName, $options: "i" };
-  }
-  if (lastName) {
-    queryObject.lastName = { $regex: lastName, $options: "i" };
+  if (cityName) {
+    queryObject.cityName = { $regex: cityName, $options: "i" };
   }
 
-  // let apiData = User.find(queryObject);
-  let apiData = User.aggregate([
+  // let apiData = City.find(queryObject);
+  let apiData = City.aggregate([
     {
       $addFields: {
-        userRoleId: { $toObjectId: "$userRoleId" },
+        stateId: { $toObjectId: "$stateId" },
       },
     },
     {
       $lookup: {
-        from: "userroles",
-        localField: "userRoleId",
+        from: "states",
+        localField: "stateId",
         foreignField: "_id",
-        as: "userRoleId",
+        as: "stateId",
       },
     },
     {
@@ -58,12 +54,12 @@ const getAllUsers = async (req, res) => {
     apiData = apiData.select(selectFix);
   }
 
-  let page = Number(req?.query?.page) || 1;
-  let limit = Number(req?.query?.limit) || 10;
+  //   let page = Number(req?.query?.page) || 1;
+  //   let limit = Number(req?.query?.limit) || 10;
 
-  let skip = (page - 1) * limit;
+  //   let skip = (page - 1) * limit;
 
-  apiData = apiData.skip(skip).limit(limit);
+  //   apiData = apiData.skip(skip).limit(limit);
 
   const myData = await apiData;
   res.status(200).json({
@@ -74,26 +70,26 @@ const getAllUsers = async (req, res) => {
   });
 };
 
-const getUserById = async (req, res) => {
-  const { userId } = req.params || {};
+const getCityById = async (req, res) => {
+  const { cityId } = req.params || {};
   try {
-    let apiData = User.aggregate([
+    let apiData = City.aggregate([
       {
         $addFields: {
-          userRoleId: { $toObjectId: "$userRoleId" },
+          stateId: { $toObjectId: "$stateId" },
         },
       },
       {
         $lookup: {
-          from: "userroles",
-          localField: "userRoleId",
+          from: "states",
+          localField: "stateId",
           foreignField: "_id",
-          as: "userRoleId",
+          as: "stateId",
         },
       },
       {
         $match: {
-          $expr: { $eq: ["$_id", { $toObjectId: userId }] },
+          $expr: { $eq: ["$_id", { $toObjectId: cityId }] },
         },
       },
     ]);
@@ -109,12 +105,12 @@ const getUserById = async (req, res) => {
   }
 };
 
-const userUpdateById = async (req, res) => {
-  const { userId } = req.params || {};
+const cityUpdateById = async (req, res) => {
+  const { cityId } = req.params || {};
   try {
-    const result = await User.updateOne(
+    const result = await City.updateOne(
       {
-        _id: userId,
+        _id: cityId,
       },
       req.body
     );
@@ -128,11 +124,11 @@ const userUpdateById = async (req, res) => {
   }
 };
 
-const userDeleteById = async (req, res) => {
-  const { userId } = req.params || {};
+const cityDeleteById = async (req, res) => {
+  const { cityId } = req.params || {};
   try {
-    const result = await User.remove({
-      _id: userId,
+    const result = await City.remove({
+      _id: cityId,
     });
     res.status(200).json({
       isSuccess: 1,
@@ -145,9 +141,9 @@ const userDeleteById = async (req, res) => {
 };
 
 module.exports = {
-  createUsers,
-  getAllUsers,
-  getUserById,
-  userUpdateById,
-  userDeleteById,
+  createCity,
+  getAllCities,
+  getCityById,
+  cityUpdateById,
+  cityDeleteById,
 };

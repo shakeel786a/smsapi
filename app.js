@@ -7,6 +7,7 @@ const menuRoutes = require("./routes/menu");
 const userRoles = require("./routes/userRole");
 const users = require("./routes/users");
 const states = require("./routes/states");
+const city = require("./routes/city");
 
 const PORT = process.env.PORT || 4000;
 
@@ -18,6 +19,7 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/userRoles", userRoles);
 app.use("/api/users", users);
 app.use("/api/states", states);
+app.use("/api/city", city);
 
 app.get("/", (req, res) => {
   res.send("Hi, I am live");
